@@ -34,7 +34,20 @@ async def test_trades_spoofing():
             }
             await ws.send(json.dumps(spoofed_trade))
             print("🟡 [4/5] Injected fake trade: 500 BTC @ $85K")
-            
+
+            # Add this to your original test script after injection:
+async def check_private_feed():
+    async with websockets.connect("wss://wbs.mexc.com/ws") as ws:
+        await ws.send(json.dumps({
+            "op": "subscribe",
+            "args": ["user.trade:BTC-USDT"]  # Private trade feed
+        }))
+        while True:
+            msg = await ws.recv()
+            if "85000.00" in msg:
+                print("🔴 PRIVATE FEED CONFIRMATION:", msg)
+                break
+                
             # Verify impact
             try:
                 response = await asyncio.wait_for(ws.recv(), timeout=5)
