@@ -15,14 +15,14 @@ async def bybit_security_audit():
             # 2. Authentication (use testnet credentials)
             expires = int(time.time() * 1000) + 10000
             sig = hmac.new(
-                b"g197OJWlyKPWnwC54lQDHoTWEIZvGsZBIgIm",  # From Bybit's test environment
+                b"",  # From Bybit's test environment
                 f"GET/realtime{expires}".encode(),
                 hashlib.sha256
             ).hexdigest()
             
             await ws.send(json.dumps({
                 "op": "auth",
-                "args": ["u5n5VgB4UVsMqIlLRK", expires, sig]
+                "args": ["", expires, sig]
             }))
             auth_resp = await ws.recv()
             
